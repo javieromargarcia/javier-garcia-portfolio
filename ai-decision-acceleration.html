@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Driven Decision Acceleration - Javier Garcia</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #ec4899;
+            --accent: #14b8a6;
+            --dark: #0f172a;
+            --dark-secondary: #1e293b;
+            --light: #f8fafc;
+            --gray: #94a3b8;
+            --success: #10b981;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--dark);
+            color: var(--light);
+            line-height: 1.7;
+        }
+
+        /* Animated Background */
+        .bg-pattern {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            background: linear-gradient(135deg, var(--dark) 0%, #1a1f3a 100%);
+            overflow: hidden;
+        }
+
+        .floating-nodes {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .node {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: var(--primary);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: nodeFloat 20s infinite ease-in-out;
+        }
+
+        @keyframes nodeFloat {
+            0%, 100% { transform: translate(0, 0); opacity: 0.3; }
+            50% { transform: translate(30px, -30px); opacity: 0.6; }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 20px 0;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            transform: translateX(-5px);
+            box-shadow: 0 5px 20px rgba(99, 102, 241, 0.4);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 120px 20px 60px;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero .subtitle {
+            font-size: 1.3rem;
+            color: var(--gray);
+            max-width: 800px;
+            margin: 0 auto 40px;
+        }
+
+        /* Content Sections */
+        .section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        .overview-card {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(236, 72, 153, 0.05));
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 60px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .overview-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+        }
+
+        .overview-card h2 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+
+        .overview-card p {
+            color: var(--light);
+            margin-bottom: 15px;
+        }
+
+        /* Program Links Grid */
+        .programs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .program-card {
+            background: var(--dark-secondary);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 15px;
+            padding: 30px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .program-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(99, 102, 241, 0.2);
+            border-color: var(--primary);
+        }
+
+        .program-label {
+            display: inline-block;
+            padding: 5px 15px;
+            background: var(--primary);
+            color: white;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin-bottom: 15px;
+        }
+
+        .program-title {
+            color: var(--light);
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+        }
+
+        .program-links {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .program-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 8px 16px;
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            text-decoration: none;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .program-link:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Publications Section */
+        .publications-container {
+            margin: 60px 0;
+        }
+
+        .publication-card {
+            background: var(--dark-secondary);
+            border-left: 4px solid var(--primary);
+            padding: 25px;
+            margin-bottom: 25px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .publication-card:hover {
+            transform: translateX(10px);
+            box-shadow: 0 5px 30px rgba(99, 102, 241, 0.2);
+        }
+
+        .publication-title {
+            color: var(--primary);
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .publication-journal {
+            color: var(--secondary);
+            font-style: italic;
+            margin-bottom: 10px;
+        }
+
+        .publication-description {
+            color: var(--gray);
+            margin-bottom: 15px;
+        }
+
+        .publication-relevance {
+            background: rgba(20, 184, 166, 0.1);
+            border-left: 3px solid var(--accent);
+            padding: 10px 15px;
+            margin-top: 15px;
+            color: var(--light);
+        }
+
+        .publication-links {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .pub-link {
+            padding: 5px 12px;
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            text-decoration: none;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+        }
+
+        .pub-link:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Metrics Section */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), transparent);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .metric-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+        }
+
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .metric-label {
+            color: var(--gray);
+            margin-top: 10px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .programs-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .publication-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="bg-pattern">
+        <div class="floating-nodes" id="nodesContainer"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a href="javier-garcia-portfolio-enhanced.html" class="back-btn">
+                <span>←</span>
+                <span>Back to Portfolio</span>
+            </a>
+            <div style="color: var(--gray);">AI-Driven Decision Acceleration</div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="hero">
+        <h1>AI-Driven Decision Acceleration</h1>
+        <p class="subtitle">
+            Orchestrating cross-institutional portfolios to accelerate human-AI decision-making by 10×–100×
+        </p>
+    </div>
+
+    <!-- Main Content -->
+    <div class="section">
+        <!-- Overview -->
+        <div class="overview-card">
+            <h2>What I Do</h2>
+            <p>
+                I orchestrate cross-institutional portfolios and deliverables—bridging science, product, and mission—for hybrid human-AI teams. 
+                I scope problems, secure funding, assemble complementary expertise (neuroscience, AI/ML, HCI, operations research), and ensure 
+                results ship (demos, metrics, studies, transitions).
+            </p>
+            <p>
+                I design adaptive, collaborative decision architectures that make human-centric and latent cognitive signals legible to agents, 
+                then use those signals to route attention, diversify options, and converge faster with safeguards. Work spans metric design, 
+                experiment platforms, and algorithms.
+            </p>
+        </div>
+
+        <!-- Leadership Narrative -->
+        <div class="overview-card">
+            <h2>Leadership Narrative</h2>
+            <p>
+                At the U.S. Army DEVCOM ARL, I led Hybrid Human-Technology Intelligence and Collective Judgment initiatives, aligning 
+                neuroscience + AI + HCI toward 10×–100× decision acceleration and cognitive security. Outputs included agentic-AI 
+                experimental platforms for team decision-making, metrics for creativity/consensus/trust, and allied collaborations 
+                (e.g., NATO RTG) that translated research into studies and demonstrations.
+            </p>
+        </div>
+
+        <!-- Why This Matters -->
+        <div class="overview-card">
+            <h2>Why This Matters</h2>
+            <p>
+                Foundation-model agents used in human-AI partnerships need grounded, network-level targets and team-level validity. 
+                Our work shows:
+            </p>
+            <div class="metrics-grid" style="margin-top: 20px;">
+                <div class="metric-card">
+                    <div class="metric-value">(i)</div>
+                    <div class="metric-label">Inter-brain coordination is quantifiable</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">(ii)</div>
+                    <div class="metric-label">Mesoscale brain states predict behavior</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">(iii)</div>
+                    <div class="metric-label">Decoders generalize from individuals to teams</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Program Context -->
+        <h2 style="color: var(--primary); margin: 40px 0 30px;">Program Leadership & Context</h2>
+        <div class="programs-grid">
+            <div class="program-card">
+                <span class="program-label">Manager, Science Lead</span>
+                <h3 class="program-title">Hybrid Human-Technology Intelligence (HHTI)</h3>
+                <p style="color: var(--gray);">
+                    Leading novel cognition research when pairing humans with AI for 10X-100X acceleration in decisions, creativity, and adaptation.
+                </p>
+                <div class="program-links">
+                    <a href="#" class="program-link" onclick="alert('HHTI Overview link would go here')">
+                        <span>📄</span> HHTI Overview
+                    </a>
+                    <a href="#" class="program-link" onclick="alert('Workshop Summary link would go here')">
+                        <span>📊</span> Workshop Summary
+                    </a>
+                </div>
+            </div>
+
+            <div class="program-card">
+                <span class="program-label">Science Co-Lead</span>
+                <h3 class="program-title">STRONG CRA</h3>
+                <p style="color: var(--gray);">
+                    Human-Agent Teaming research integrating hybrid teaming with decision-support metrics.
+                </p>
+                <div class="program-links">
+                    <a href="#" class="program-link" onclick="alert('STRONG CRA Overview link would go here')">
+                        <span>📄</span> Program Overview
+                    </a>
+                    <a href="#" class="program-link" onclick="alert('FOA link would go here')">
+                        <span>📋</span> FOA
+                    </a>
+                </div>
+            </div>
+
+            <div class="program-card">
+                <span class="program-label">Internal Human Science Lead</span>
+                <h3 class="program-title">CJF CRA (Collective Judgment)</h3>
+                <p style="color: var(--gray);">
+                    Metrics and platforms for consensus formation & cognitive security.
+                </p>
+                <div class="program-links">
+                    <a href="#" class="program-link" onclick="alert('CJF CRA Overview link would go here')">
+                        <span>📄</span> Overview
+                    </a>
+                    <a href="#" class="program-link" onclick="alert('BAA/Opportunity link would go here')">
+                        <span>📋</span> BAA/Opportunity
+                    </a>
+                </div>
+            </div>
+
+            <div class="program-card">
+                <span class="program-label">Allied Collaboration</span>
+                <h3 class="program-title">NATO STO HFM-373 RTG</h3>
+                <p style="color: var(--gray);">
+                    Allied collaboration and technology enablers for cognitive operations.
+                </p>
+                <div class="program-links">
+                    <a href="#" class="program-link" onclick="alert('NATO Activities link would go here')">
+                        <span>🌍</span> Activities
+                    </a>
+                    <a href="#" class="program-link" onclick="alert('2025 CPoW PDF link would go here')">
+                        <span>📄</span> 2025 CPoW PDF
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Selected Publications -->
+        <h2 style="color: var(--primary); margin: 60px 0 30px;">Selected Publications & Evidence</h2>
+        <div class="publications-container">
+            
+            <div class="publication-card">
+                <div class="publication-title">
+                    Symbolic dynamics of joint brain states during dyadic coordination (2025)
+                </div>
+                <div class="publication-journal">Chaos: An Interdisciplinary Journal of Nonlinear Science</div>
+                <div class="publication-description">
+                    Shows interpretable symbolic encodings capture inter-brain coordination and performance.
+                </div>
+                <div class="publication-relevance">
+                    <strong>Relevance:</strong> Basis functions for multi-person state labels in foundation models
+                </div>
+                <div class="publication-links">
+                    <a href="https://doi.org/10.1063/5.0184710" class="pub-link" target="_blank">Publisher</a>
+                    <a href="https://arxiv.org/abs/2408.13360" class="pub-link" target="_blank">arXiv</a>
+                    <a href="#" class="pub-link" onclick="alert('PubMed link would go here')">PubMed</a>
+                </div>
+            </div>
+
+            <div class="publication-card">
+                <div class="publication-title">
+                    Cognitive chimera states in human brain networks (2019)
+                </div>
+                <div class="publication-journal">Science Advances</div>
+                <div class="publication-description">
+                    Metastable "chimera" states mark flexible control—key for creative problem solving.
+                </div>
+                <div class="publication-relevance">
+                    <strong>Relevance:</strong> Targets for acceleration without brittleness
+                </div>
+                <div class="publication-links">
+                    <a href="https://www.science.org/doi/10.1126/sciadv.aau8535" class="pub-link" target="_blank">Science</a>
+                    <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6450684/" class="pub-link" target="_blank">PMC</a>
+                </div>
+            </div>
+
+            <div class="publication-card">
+                <div class="publication-title">
+                    Brain connectivity dynamics during social interaction reflect social network structure (2017)
+                </div>
+                <div class="publication-journal">PNAS</div>
+                <div class="publication-description">
+                    Neural synchrony tracks real-world ties.
+                </div>
+                <div class="publication-relevance">
+                    <strong>Relevance:</strong> Validates team-level emotion/engagement readouts
+                </div>
+                <div class="publication-links">
+                    <a href="https://www.pnas.org/doi/10.1073/pnas.1616130114" class="pub-link" target="_blank">PDF</a>
+                    <a href="https://pubmed.ncbi.nlm.nih.gov/28461460/" class="pub-link" target="_blank">PubMed</a>
+                </div>
+            </div>
+
+            <div class="publication-card">
+                <div class="publication-title">
+                    Valuation & mentalizing networks predict propagation of online recommendations (2021)
+                </div>
+                <div class="publication-journal">Scientific Reports</div>
+                <div class="publication-description">
+                    Affective/mentalizing networks predict collective adoption.
+                </div>
+                <div class="publication-relevance">
+                    <strong>Relevance:</strong> Maps emotion→decision influence pathways
+                </div>
+                <div class="publication-links">
+                    <a href="https://www.nature.com/articles/s41598-021-90420-2" class="pub-link" target="_blank">Nature</a>
+                    <a href="https://pubmed.ncbi.nlm.nih.gov/34078948/" class="pub-link" target="_blank">PubMed</a>
+                </div>
+            </div>
+
+            <div class="publication-card">
+                <div class="publication-title">
+                    Compact CNNs for asynchronous SSVEP BCI (2018)
+                </div>
+                <div class="publication-journal">Journal of Neural Engineering</div>
+                <div class="publication-description">
+                    Resource-efficient decoders for low-latency BCIs.
+                </div>
+                <div class="publication-relevance">
+                    <strong>Relevance:</strong> On-device pipelines for wearable decoding
+                </div>
+                <div class="publication-links">
+                    <a href="https://arxiv.org/abs/1803.04566" class="pub-link" target="_blank">arXiv</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Translational Thread -->
+        <div class="overview-card" style="margin-top: 60px;">
+            <h2>Translational Thread</h2>
+            <p style="font-size: 1.1rem; color: var(--light);">
+                From interpretable symbolic encodings and metastable network markers 
+                → to compact decoders and team-level validity 
+                → to decision-support agents that adapt to human state and accelerate ideation, option generation, and convergence.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Create floating nodes
+        function createNodes() {
+            const container = document.getElementById('nodesContainer');
+            for (let i = 0; i < 20; i++) {
+                const node = document.createElement('div');
+                node.className = 'node';
+                node.style.left = Math.random() * 100 + '%';
+                node.style.top = Math.random() * 100 + '%';
+                node.style.animationDelay = Math.random() * 20 + 's';
+                node.style.animationDuration = (15 + Math.random() * 10) + 's';
+                
+                // Random colors
+                const colors = ['#6366f1', '#ec4899', '#14b8a6'];
+                node.style.background = colors[Math.floor(Math.random() * colors.length)];
+                
+                container.appendChild(node);
+            }
+        }
+        
+        createNodes();
+
+        // Connect nodes with lines
+        function drawConnections() {
+            const canvas = document.createElement('canvas');
+            canvas.style.position = 'absolute';
+            canvas.style.top = '0';
+            canvas.style.left = '0';
+            canvas.style.width = '100%';
+            canvas.style.height = '100%';
+            canvas.style.pointerEvents = 'none';
+            canvas.style.opacity = '0.1';
+            document.querySelector('.bg-pattern').appendChild(canvas);
+            
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                const nodes = document.querySelectorAll('.node');
+                
+                nodes.forEach((node, i) => {
+                    const rect1 = node.getBoundingClientRect();
+                    nodes.forEach((node2, j) => {
+                        if (i < j) {
+                            const rect2 = node2.getBoundingClientRect();
+                            const distance = Math.sqrt(
+                                Math.pow(rect2.left - rect1.left, 2) + 
+                                Math.pow(rect2.top - rect1.top, 2)
+                            );
+                            
+                            if (distance < 200) {
+                                ctx.beginPath();
+                                ctx.moveTo(rect1.left + 3, rect1.top + 3);
+                                ctx.lineTo(rect2.left + 3, rect2.top + 3);
+                                ctx.strokeStyle = '#6366f1';
+                                ctx.lineWidth = 0.5;
+                                ctx.stroke();
+                            }
+                        }
+                    });
+                });
+                
+                requestAnimationFrame(animate);
+            }
+            
+            animate();
+        }
+        
+        drawConnections();
+    </script>
+</body>
+</html>
